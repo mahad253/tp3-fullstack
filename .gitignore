@@ -1,0 +1,22 @@
+# IDE
+.idea/
+.vscode/
+
+# Java / Spring
+target/
+*.log
+
+# Node / Angular / React
+node_modules/
+dist/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.env
+
+# Autres
+*.iml
