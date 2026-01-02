@@ -1,12 +1,22 @@
-import axios, { AxiosResponse } from 'axios';
-import { MinimalProduct, Product, ResponseArray } from '../types';
+import { MinimalProduct, Product } from '../types';
+import { ResponseArray } from '../types/response';
+import apiClient from '../utils/axiosClient';
+import { AxiosResponse } from 'axios';
 
 export function getProducts(page: number, size: number): Promise<ResponseArray<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products?page=${page}&size=${size}`);
+    return apiClient.get('/api/v1/products', {
+        params: { page, size },
+    });
 }
 
-export function getProductsbyShop(shopId: string, page: number, size: number): Promise<ResponseArray<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products?shopId=${shopId}&page=${page}&size=${size}`);
+export function getProductsbyShop(
+    shopId: string,
+    page: number,
+    size: number,
+): Promise<ResponseArray<Product>> {
+    return apiClient.get('/api/v1/products', {
+        params: { shopId, page, size },
+    });
 }
 
 export function getProductsbyShopAndCategory(
@@ -15,23 +25,23 @@ export function getProductsbyShopAndCategory(
     page: number,
     size: number,
 ): Promise<ResponseArray<Product>> {
-    return axios.get(
-        `${process.env.REACT_APP_API}/products?shopId=${shopId}&categoryId=${categoryId}&page=${page}&size=${size}`,
-    );
+    return apiClient.get('/api/v1/products', {
+        params: { shopId, categoryId, page, size },
+    });
 }
 
 export function getProduct(id: string): Promise<AxiosResponse<Product>> {
-    return axios.get(`${process.env.REACT_APP_API}/products/${id}`);
+    return apiClient.get(`/api/v1/products/${id}`);
 }
 
 export function createProduct(product: MinimalProduct): Promise<AxiosResponse<Product>> {
-    return axios.post(`${process.env.REACT_APP_API}/products`, product);
+    return apiClient.post('/api/v1/products', product);
 }
 
 export function editProduct(product: MinimalProduct): Promise<AxiosResponse<Product>> {
-    return axios.put(`${process.env.REACT_APP_API}/products`, product);
+    return apiClient.put('/api/v1/products', product);
 }
 
 export function deleteProduct(id: string): Promise<AxiosResponse<Product>> {
-    return axios.delete(`${process.env.REACT_APP_API}/products/${id}`);
+    return apiClient.delete(`/api/v1/products/${id}`);
 }

@@ -1,32 +1,37 @@
 import { MinimalShop } from './../types/shop';
-import axios, { AxiosResponse } from 'axios';
 import { Shop } from '../types';
 import { ResponseArray } from '../types/response';
+import apiClient from '../utils/axiosClient';
+import { AxiosResponse } from 'axios';
 
 export function getShops(page: number, size: number): Promise<ResponseArray<Shop>> {
-    return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}`);
+    return apiClient.get('/api/v1/shops', {
+        params: { page, size },
+    });
 }
 
 export function getShopsSorted(page: number, size: number, sort: string): Promise<ResponseArray<Shop>> {
-    return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}&sortBy=${sort}`);
+    return apiClient.get('/api/v1/shops', {
+        params: { page, size, sortBy: sort },
+    });
 }
 
 export function getShopsFiltered(page: number, size: number, urlFilters: string): Promise<ResponseArray<Shop>> {
-    return axios.get(`${process.env.REACT_APP_API}/shops?page=${page}&size=${size}${urlFilters}`);
+    return apiClient.get(`/api/v1/shops?page=${page}&size=${size}${urlFilters}`);
 }
 
 export function getShop(id: string): Promise<AxiosResponse<Shop>> {
-    return axios.get(`${process.env.REACT_APP_API}/shops/${id}`);
+    return apiClient.get(`/api/v1/shops/${id}`);
 }
 
 export function createShop(shop: MinimalShop): Promise<AxiosResponse<Shop>> {
-    return axios.post(`${process.env.REACT_APP_API}/shops`, shop);
+    return apiClient.post('/api/v1/shops', shop);
 }
 
 export function editShop(shop: MinimalShop): Promise<AxiosResponse<Shop>> {
-    return axios.put(`${process.env.REACT_APP_API}/shops`, shop);
+    return apiClient.put('/api/v1/shops', shop);
 }
 
 export function deleteShop(id: string): Promise<AxiosResponse<Shop>> {
-    return axios.delete(`${process.env.REACT_APP_API}/shops/${id}`);
+    return apiClient.delete(`/api/v1/shops/${id}`);
 }

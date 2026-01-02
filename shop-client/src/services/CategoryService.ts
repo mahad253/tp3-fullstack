@@ -1,22 +1,26 @@
-import axios, { AxiosResponse } from 'axios';
-import { Category, MinimalCategory, ResponseArray } from '../types';
+import { Category, MinimalCategory } from '../types';
+import { ResponseArray } from '../types/response';
+import apiClient from '../utils/axiosClient';
+import { AxiosResponse } from 'axios';
 
 export function getCategories(page: number, size: number): Promise<ResponseArray<Category>> {
-    return axios.get(`${process.env.REACT_APP_API}/categories?page=${page}&size=${size}`);
+    return apiClient.get('/api/v1/categories', {
+        params: { page, size },
+    });
 }
 
 export function getCategory(id: string): Promise<AxiosResponse<Category>> {
-    return axios.get(`${process.env.REACT_APP_API}/categories/${id}`);
+    return apiClient.get(`/api/v1/categories/${id}`);
 }
 
 export function createCategory(category: MinimalCategory): Promise<AxiosResponse<Category>> {
-    return axios.post(`${process.env.REACT_APP_API}/categories`, category);
+    return apiClient.post('/api/v1/categories', category);
 }
 
 export function editCategory(category: MinimalCategory): Promise<AxiosResponse<Category>> {
-    return axios.put(`${process.env.REACT_APP_API}/categories`, category);
+    return apiClient.put('/api/v1/categories', category);
 }
 
 export function deleteCategory(id: string): Promise<AxiosResponse<Category>> {
-    return axios.delete(`${process.env.REACT_APP_API}/categories/${id}`);
+    return apiClient.delete(`/api/v1/categories/${id}`);
 }
