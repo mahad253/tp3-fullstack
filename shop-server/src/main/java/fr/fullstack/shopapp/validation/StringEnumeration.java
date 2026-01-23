@@ -1,7 +1,8 @@
 package fr.fullstack.shopapp.validation;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -20,6 +21,7 @@ import java.lang.annotation.Target;
 })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StringEnumeration {
+
     Class<? extends Enum<?>> enumClass();
 
     Class<?>[] groups() default {};
@@ -27,5 +29,4 @@ public @interface StringEnumeration {
     String message() default "{com.xxx.bean.validation.constraints.StringEnumeration.message}";
 
     Class<? extends Payload>[] payload() default {};
-
 }

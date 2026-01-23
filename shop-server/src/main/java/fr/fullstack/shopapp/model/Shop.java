@@ -8,18 +8,19 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextFi
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,7 @@ import java.util.List;
 @Table(name = "shops")
 @Indexed(index = "idx_shops")
 public class Shop {
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -51,12 +53,12 @@ public class Shop {
     @Formula(value = "(SELECT COUNT(*) FROM products p WHERE p.shop_id = id)")
     private Long nbProducts;
 
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<@Valid OpeningHoursShop> openingHours = new ArrayList<OpeningHoursShop>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<@Valid OpeningHoursShop> openingHours = new ArrayList<>();
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY)
     @JsonIgnore
-    private List<Product> products = new ArrayList<Product>();
+    private List<Product> products = new ArrayList<>();
 
     public LocalDate getCreatedAt() {
         return createdAt;
