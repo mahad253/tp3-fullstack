@@ -7,6 +7,8 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.GenericField;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+import fr.fullstack.shopapp.validation.NoOverlappingOpeningHours;
+
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -54,7 +56,9 @@ public class Shop {
     private Long nbProducts;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @NoOverlappingOpeningHours
     private List<@Valid OpeningHoursShop> openingHours = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY)
     @JsonIgnore

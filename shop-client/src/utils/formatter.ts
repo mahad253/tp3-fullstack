@@ -15,6 +15,11 @@ export const priceFormatter = (price: number) => {
     const formatter = new Intl.NumberFormat('fr-FR', {
         style: 'currency',
         currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
     });
-    return formatter.format(price);
+
+    // price est en centimes → conversion euros
+    return formatter.format(price / 100);
 };
+

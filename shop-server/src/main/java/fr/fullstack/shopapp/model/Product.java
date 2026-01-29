@@ -43,7 +43,7 @@ public class Product {
     @Column(nullable = false)
     @PositiveOrZero(message = "Price must be positive")
     @NotNull(message = "Price may not be null")
-    private float price;
+    private Long price;
 
     @ManyToOne
     private Shop shop;
@@ -60,7 +60,7 @@ public class Product {
         return localizedProduct;
     }
 
-    public float getPrice() {
+    public Long getPrice() {
         return price;
     }
 
@@ -80,7 +80,7 @@ public class Product {
         this.localizedProduct = localizedProduct;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
