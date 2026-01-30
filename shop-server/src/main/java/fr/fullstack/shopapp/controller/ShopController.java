@@ -63,10 +63,11 @@ public class ShopController {
             @RequestParam(required = false) Optional<String> sortBy,
             @RequestParam(required = false) Optional<Boolean> inVacations,
             @RequestParam(required = false) Optional<String> createdAfter,
-            @RequestParam(required = false) Optional<String> createdBefore
+            @RequestParam(required = false) Optional<String> createdBefore,
+            @RequestParam(required = false) Optional<String> label
     ) {
         return ResponseEntity.ok(
-                service.getShopList(sortBy, inVacations, createdAfter, createdBefore, pageable)
+                service.getShopList(sortBy, inVacations, createdAfter, createdBefore, label, pageable)
         );
     }
 

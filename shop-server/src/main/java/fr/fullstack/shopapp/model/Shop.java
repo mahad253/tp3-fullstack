@@ -22,6 +22,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jakarta.persistence.JoinColumn;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -56,8 +57,10 @@ public class Shop {
     private Long nbProducts;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "shop_id")
+    @Valid
     @NoOverlappingOpeningHours
-    private List<@Valid OpeningHoursShop> openingHours = new ArrayList<>();
+    private List<OpeningHoursShop> openingHours = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "shop", fetch = FetchType.LAZY)

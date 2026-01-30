@@ -3,7 +3,6 @@ package fr.fullstack.shopapp.service;
 import fr.fullstack.shopapp.model.Product;
 import fr.fullstack.shopapp.model.Shop;
 import fr.fullstack.shopapp.repository.ShopRepository;
-import org.hibernate.search.mapper.orm.Search;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +18,15 @@ import java.util.Optional;
 
 @Service
 public class ShopService {
+
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
     private ShopRepository shopRepository;
+
+    @Autowired
+    private ElasticSearchService elasticSearchService;
 
     @Transactional
     public Shop createShop(Shop shop) throws Exception {
@@ -63,8 +66,15 @@ public class ShopService {
             Optional<Boolean> inVacations,
             Optional<String> createdBefore,
             Optional<String> createdAfter,
+            Optional<String> label,
             Pageable pageable
     ) {
+
+        // === ELASTICSEARCH (plein texte) ===
+        if (label.isPresent()) {
+            return elasticSearchService.searchShops(label.get(), pageable);
+        }
+
         // SORT
         if (sortBy.isPresent()) {
             switch (sortBy.get()) {
@@ -77,8 +87,9 @@ public class ShopService {
             }
         }
 
-        // FILTERS
-        Page<Shop> shopList = getShopListWithFilter(inVacations, createdBefore, createdAfter, pageable);
+        // FILTERS (Postgres)
+        Page<Shop> shopList =
+                getShopListWithFilter(inVacations, createdAfter, createdBefore, pageable);
         if (shopList != null) {
             return shopList;
         }
@@ -148,7 +159,9 @@ public class ShopService {
 
         if (createdBefore.isPresent() && createdAfter.isPresent()) {
             return shopRepository.findByCreatedAtBetween(
-                    LocalDate.parse(createdAfter.get()), LocalDate.parse(createdBefore.get()), pageable
+                    LocalDate.parse(createdAfter.get()),
+                    LocalDate.parse(createdBefore.get()),
+                    pageable
             );
         }
 

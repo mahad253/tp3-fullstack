@@ -20,6 +20,22 @@ export function getShopsFiltered(page: number, size: number, urlFilters: string)
     return apiClient.get(`/api/v1/shops?page=${page}&size=${size}${urlFilters}`);
 }
 
+/* ================== ELASTIC SEARCH ================== */
+export function getShopsByLabel(
+    page: number,
+    size: number,
+    label: string
+): Promise<ResponseArray<Shop>> {
+    return apiClient.get('/api/v1/shops', {
+        params: {
+            page,
+            size,
+            label,
+        },
+    });
+}
+/* =================================================== */
+
 export function getShop(id: string): Promise<AxiosResponse<Shop>> {
     return apiClient.get(`/api/v1/shops/${id}`);
 }

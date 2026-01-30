@@ -36,7 +36,7 @@ services:
     ports:
       - "9200:9200"
 
-    # ✅ HEALTHCHECK ELASTICSEARCH
+    # HEALTHCHECK ELASTICSEARCH
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 10s
@@ -50,7 +50,7 @@ services:
     container_name: shop-server
     build: ./shop-server
 
-    # ✅ L’API démarre SEULEMENT quand DB + ES sont prêts
+    # L’API démarre SEULEMENT quand DB + ES sont prêts
     depends_on:
       db:
         condition: service_healthy

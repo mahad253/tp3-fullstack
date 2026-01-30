@@ -8,7 +8,9 @@ import {
     Pagination,
     Select,
     SelectChangeEvent,
+    TextField,
     Typography,
+    Button,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useEffect, useState } from 'react';
@@ -21,24 +23,32 @@ import { ResponseArray, Shop } from '../types';
 const Home = () => {
     const navigate = useNavigate();
     const { setLoading } = useAppContext();
+
     const [shops, setShops] = useState<Shop[] | null>(null);
     const [count, setCount] = useState<number>(0);
     const [page, setPage] = useState<number>(0);
     const [pageSelected, setPageSelected] = useState<number>(0);
 
-    const [sort, setSort] = useState<string>('');
-    const [filters, setFilters] = useState<string>('');
+    const [sort, setSort] = useState('');
+    const [filters, setFilters] = useState('');
+    const [label, setLabel] = useState('');
+    const [searchInput, setSearchInput] = useState('');
 
     const getShops = () => {
         setLoading(true);
+
         let promisedShops: Promise<ResponseArray<Shop>>;
-        if (sort) {
+
+        if (label) {
+            promisedShops = ShopService.getShopsByLabel(pageSelected, 9, label);
+        } else if (sort) {
             promisedShops = ShopService.getShopsSorted(pageSelected, 9, sort);
         } else if (filters) {
             promisedShops = ShopService.getShopsFiltered(pageSelected, 9, filters);
         } else {
             promisedShops = ShopService.getShops(pageSelected, 9);
         }
+
         promisedShops
             .then((res) => {
                 setShops(res.data.content);
@@ -50,7 +60,7 @@ const Home = () => {
 
     useEffect(() => {
         getShops();
-    }, [pageSelected, sort, filters]);
+    }, [pageSelected, sort, filters, label]);
 
     const handleChangePagination = (event: React.ChangeEvent<unknown>, value: number) => {
         setPageSelected(value - 1);
@@ -58,58 +68,59 @@ const Home = () => {
 
     const handleChangeSort = (event: SelectChangeEvent) => {
         setSort(event.target.value as string);
+        setLabel('');
+    };
+
+    const handleSearch = () => {
+        setPageSelected(0);
+        setFilters('');
+        setSort('');
+        setLabel(searchInput);
     };
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5 }}>
+
             <Typography variant="h2">Les boutiques</Typography>
 
-            <Box
-                sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'flex-end',
-                }}
-            >
-                <Fab variant="extended" color="primary" aria-label="add" onClick={() => navigate('/shop/create')}>
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
+                <Fab variant="extended" color="primary" onClick={() => navigate('/shop/create')}>
                     <AddIcon sx={{ mr: 1 }} />
                     Ajouter une boutique
                 </Fab>
             </Box>
 
-            {/* Sort and filters */}
-            <Box
-                sx={{
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                }}
-            >
+            {/* SORT + SEARCH + FILTER */}
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', gap: 3 }}>
+
                 <FormControl sx={{ minWidth: 200 }}>
-                    <InputLabel id="demo-simple-select-label">Trier par</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={sort}
-                        label="Trier par"
-                        onChange={handleChangeSort}
-                    >
-                        <MenuItem value="">
-                            <em>Aucun</em>
-                        </MenuItem>
+                    <InputLabel>Trier par</InputLabel>
+                    <Select value={sort} label="Trier par" onChange={handleChangeSort}>
+                        <MenuItem value=""><em>Aucun</em></MenuItem>
                         <MenuItem value="name">Nom</MenuItem>
-                        <MenuItem value="createdAt">Date de création</MenuItem>
-                        <MenuItem value="nbProducts">Nombre de produits</MenuItem>
+                        <MenuItem value="createdAt">Date</MenuItem>
+                        <MenuItem value="nbProducts">Produits</MenuItem>
                     </Select>
                 </FormControl>
 
+                <Box sx={{ display: 'flex', gap: 2 }}>
+                    <TextField
+                        label="Rechercher une boutique"
+                        value={searchInput}
+                        onChange={(e) => setSearchInput(e.target.value)}
+                    />
+
+                    <Button variant="contained" onClick={handleSearch}>
+                        Rechercher
+                    </Button>
+                </Box>
+
                 <Filters setUrlFilters={setFilters} setSort={setSort} sort={sort} />
+
             </Box>
 
-            {/* Shops */}
-            <Grid container alignItems="center" rowSpacing={3} columnSpacing={3}>
+            {/* SHOPS */}
+            <Grid container rowSpacing={3} columnSpacing={3}>
                 {shops?.map((shop) => (
                     <Grid item key={shop.id} xs={4}>
                         <ShopCard shop={shop} />
@@ -117,13 +128,11 @@ const Home = () => {
                 ))}
             </Grid>
 
-            {/* Pagination */}
+            {/* PAGINATION */}
             {shops?.length !== 0 ? (
-                <Pagination count={count} page={page} siblingCount={1} onChange={handleChangePagination} />
+                <Pagination count={count} page={page} onChange={handleChangePagination} />
             ) : (
-                <Typography variant="h5" sx={{ mt: -1 }}>
-                    Aucune boutique correspondante
-                </Typography>
+                <Typography variant="h5">Aucune boutique correspondante</Typography>
             )}
         </Box>
     );
