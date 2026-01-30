@@ -20,17 +20,16 @@ public class NoOverlappingOpeningHoursValidator
             OpeningHoursShop a = hours.get(i);
 
             if (a.getOpenAt() == null || a.getCloseAt() == null) {
-                return false;
+                continue;
             }
 
             for (int j = i + 1; j < hours.size(); j++) {
                 OpeningHoursShop b = hours.get(j);
 
                 if (b.getOpenAt() == null || b.getCloseAt() == null) {
-                    return false;
+                    continue;
                 }
 
-                // même jour
                 if (a.getDay() == b.getDay()) {
 
                     boolean overlap =

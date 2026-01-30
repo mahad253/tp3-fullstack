@@ -109,14 +109,18 @@ public class ShopService {
     }
 
     private void deleteNestedRelations(Shop shop) {
-        List<Product> products = shop.getProducts();
-        for (int i = 0; i < products.size(); i++) {
-            Product product = products.get(i);
-            product.setShop(null);
-            em.merge(product);
-            em.flush();
+
+        for (Product p : shop.getProducts()) {
+            p.setShop(null);
+            em.merge(p);
         }
+
+        shop.getOpeningHours().clear();
+        em.merge(shop);
+
+        em.flush();
     }
+
 
     private Shop getShop(Long id) throws Exception {
         Optional<Shop> shop = shopRepository.findById(id);

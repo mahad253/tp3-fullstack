@@ -1,22 +1,35 @@
-# IDE
+# ===== IntelliJ / IDE =====
 .idea/
-.vscode/
+*.iml
 
-# Java / Spring
-target/
-*.log
-
-# Node / Angular / React
+# ===== Node / Frontend =====
 node_modules/
 dist/
 build/
 
-# OS
+# ===== Angular =====
+.angular/
+.cache/
+
+# ===== Java / Spring =====
+target/
+*.class
+
+# ===== Maven =====
+.mvn/wrapper/maven-wrapper.jar
+
+# ===== Logs =====
+*.log
+
+# ===== OS =====
 .DS_Store
 Thumbs.db
 
-# Docker
-.env
+# ===== Docker =====
+**/CACHED
+**/writing
+**/reading
+**/transferring
+**/exporting
+PORT-4200
 
-# Autres
-*.iml
