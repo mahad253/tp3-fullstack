@@ -1,20 +1,123 @@
+/* =========================
+   Base
+========================= */
+
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
-        'Droid Sans', 'Helvetica Neue', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #f8f9fa;
 }
 
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+/* =========================
+   Layout principal
+========================= */
+
 .App {
     margin: 7% 20%;
 }
 
 .header {
-    margin: 0% 20%;
-    padding: 0 0;
+    margin: 0 20%;
+    padding: 0;
+}
+
+/* =========================
+   Titres
+========================= */
+
+h1 {
+    font-size: 3rem;
+    margin-bottom: 1.5rem;
+}
+
+/* =========================
+   Cartes (boutiques / produits)
+========================= */
+
+.shop-card,
+.product-card {
+    width: 100%;
+    max-width: 320px;
+}
+
+/* =========================
+   Filtres & actions
+========================= */
+
+.filters,
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* ===== Tablette ===== */
+@media (max-width: 1024px) {
+    .App {
+        margin: 5% 10%;
+    }
+
+    .header {
+        margin: 0 10%;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+    .App {
+        margin: 5% 5%;
+    }
+
+    .header {
+        margin: 0 5%;
+    }
+
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    /* cartes en colonne */
+    .shop-card,
+    .product-card {
+        max-width: 100%;
+    }
+
+    /* filtres empilés */
+    .filters,
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+/* ===== Très petit écran ===== */
+@media (max-width: 480px) {
+    .App {
+        margin: 4% 3%;
+    }
+
+    .header {
+        margin: 0 3%;
+    }
+
+    h1 {
+        font-size: 1.7rem;
+    }
 }
