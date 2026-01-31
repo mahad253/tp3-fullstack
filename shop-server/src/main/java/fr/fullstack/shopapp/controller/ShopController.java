@@ -1,9 +1,7 @@
 package fr.fullstack.shopapp.controller;
 
-import fr.fullstack.shopapp.model.Shop;
-import fr.fullstack.shopapp.service.ShopService;
-import fr.fullstack.shopapp.util.ErrorValidation;
-import jakarta.validation.Valid;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Optional;
+import fr.fullstack.shopapp.model.Shop;
+import fr.fullstack.shopapp.service.ShopService;
+import fr.fullstack.shopapp.util.ErrorValidation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/shops")
 public class ShopController {
-
     // TODO ADD PLAIN TEXT SEARCH FOR SHOP
     @Autowired
     private ShopService service;
@@ -35,9 +35,7 @@ public class ShopController {
     public ResponseEntity<Shop> createShop(@Valid @RequestBody Shop shop, Errors errors) {
         if (errors.hasErrors()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorValidation.getErrorValidationMessage(errors)
-            );
+                    HttpStatus.BAD_REQUEST, ErrorValidation.getErrorValidationMessage(errors));
         }
 
         try {
@@ -48,10 +46,10 @@ public class ShopController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteShop(@PathVariable long id) {
+    public HttpStatus deleteShop(@PathVariable long id) {
         try {
             service.deleteShopById(id);
-            return ResponseEntity.noContent().build();
+            return HttpStatus.NO_CONTENT;
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -65,16 +63,16 @@ public class ShopController {
             @RequestParam(required = false) Optional<String> createdAfter,
             @RequestParam(required = false) Optional<String> createdBefore,
             @RequestParam(required = false) Optional<String> label
+
     ) {
         return ResponseEntity.ok(
-                service.getShopList(sortBy, inVacations, createdAfter, createdBefore, label, pageable)
-        );
+                service.getShopList(sortBy, inVacations, createdAfter, createdBefore, label, pageable));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Shop> getShopById(@PathVariable long id) {
         try {
-            return ResponseEntity.ok(service.getShopById(id));
+            return ResponseEntity.ok().body(service.getShopById(id));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -84,15 +82,14 @@ public class ShopController {
     public ResponseEntity<Shop> updateShop(@Valid @RequestBody Shop shop, Errors errors) {
         if (errors.hasErrors()) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
-                    ErrorValidation.getErrorValidationMessage(errors)
-            );
+                    HttpStatus.BAD_REQUEST, ErrorValidation.getErrorValidationMessage(errors));
         }
 
         try {
-            return ResponseEntity.ok(service.updateShop(shop));
+            return ResponseEntity.ok().body(service.updateShop(shop));
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
+
 }

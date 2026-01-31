@@ -53,13 +53,12 @@ public class ShopService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Shop getShopById(long id) throws Exception {
-        try {
-            return getShop(id);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        return shopRepository.findByIdWithOpeningHours(id)
+                .orElseThrow(() -> new Exception("Shop with id " + id + " not found"));
     }
+
 
     public Page<Shop> getShopList(
             Optional<String> sortBy,

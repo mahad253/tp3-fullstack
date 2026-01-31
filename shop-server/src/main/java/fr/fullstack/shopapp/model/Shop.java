@@ -2,6 +2,7 @@ package fr.fullstack.shopapp.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
@@ -10,19 +11,9 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
 import fr.fullstack.shopapp.validation.NoOverlappingOpeningHours;
 
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import jakarta.persistence.JoinColumn;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -39,8 +30,8 @@ public class Shop {
     private LocalDate createdAt;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false)
     @NotNull(message = "InVacations may not be null")
@@ -57,9 +48,11 @@ public class Shop {
     private Long nbProducts;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "shop_id")
-    @Valid
-    @NoOverlappingOpeningHours
+    @JoinTable(
+            name = "shops_opening_hours",
+            joinColumns = @JoinColumn(name = "shop_id"),
+            inverseJoinColumns = @JoinColumn(name = "opening_hours_id")
+    )
     private List<OpeningHoursShop> openingHours = new ArrayList<>();
 
 
@@ -71,7 +64,7 @@ public class Shop {
         return createdAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -95,7 +88,7 @@ public class Shop {
         return this.products;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
