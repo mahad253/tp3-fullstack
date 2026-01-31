@@ -43,15 +43,11 @@ public class ShopService {
 
     @Transactional
     public void deleteShopById(long id) throws Exception {
-        try {
-            Shop shop = getShop(id);
-            // delete nested relations with products
-            deleteNestedRelations(shop);
-            shopRepository.deleteById(id);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        Shop shop = getShopById(id); // ✅
+        deleteNestedRelations(shop);
+        shopRepository.deleteById(id);
     }
+
 
     @Transactional(readOnly = true)
     public Shop getShopById(long id) throws Exception {
@@ -99,12 +95,8 @@ public class ShopService {
 
     @Transactional
     public Shop updateShop(Shop shop) throws Exception {
-        try {
-            getShop(shop.getId());
-            return this.createShop(shop);
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
+        getShopById(shop.getId()); // ✅ vérification avec JOIN FETCH
+        return this.createShop(shop);
     }
 
     private void deleteNestedRelations(Shop shop) {
@@ -121,13 +113,7 @@ public class ShopService {
     }
 
 
-    private Shop getShop(Long id) throws Exception {
-        Optional<Shop> shop = shopRepository.findById(id);
-        if (!shop.isPresent()) {
-            throw new Exception("Shop with id " + id + " not found");
-        }
-        return shop.get();
-    }
+
 
     private Page<Shop> getShopListWithFilter(
             Optional<Boolean> inVacations,

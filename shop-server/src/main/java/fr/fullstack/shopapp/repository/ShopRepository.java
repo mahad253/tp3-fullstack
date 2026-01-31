@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
+import org.springframework.data.repository.query.Param;
 
 
 import fr.fullstack.shopapp.model.Shop;
@@ -48,11 +49,11 @@ public interface ShopRepository extends JpaRepository<Shop, Long>, JpaSpecificat
     Page<Shop> findByOrderByNbProductsAsc(Pageable pageable);
 
     @Query("""
-    SELECT DISTINCT s
+    SELECT s
     FROM Shop s
     LEFT JOIN FETCH s.openingHours
     WHERE s.id = :id
 """)
-    Optional<Shop> findByIdWithOpeningHours(Long id);
+    Optional<Shop> findByIdWithOpeningHours(@Param("id") Long id);
 
 }
